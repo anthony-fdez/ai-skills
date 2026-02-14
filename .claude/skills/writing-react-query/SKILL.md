@@ -1,11 +1,11 @@
 ---
 name: writing-react-query
-description: Enforces React Query patterns for data fetching, caching, and server state management. Use when writing queries, mutations, or handling API data.
+description: Enforces React Query patterns for data fetching, caching, mutations, and server state management. Use when writing queries, mutations, or handling API data.
 ---
 
 # Writing React Query
 
-Patterns for using React Query effectively, including hook organization, caching strategies, and anti-patterns to avoid.
+Patterns for using React Query effectively, including hook organization, caching strategies, mutation patterns, and anti-patterns to avoid.
 
 ## Create Dedicated Query Hooks
 
@@ -392,15 +392,190 @@ type AppType = {
 }
 ```
 
-## Checklist
+## Use .mutate() with Callbacks Instead of .mutateAsync()
 
-- [ ] Query hooks are in dedicated files (not inline in components)
-- [ ] Parameter types imported from action/library (not duplicated)
-- [ ] Transformations use `select`, not in `queryFn`
-- [ ] `staleTime` and `gcTime` configured based on data characteristics
-- [ ] API data stays in React Query cache (not synced to Zustand)
-- [ ] Query functions are pure (no side effects)
-- [ ] Loading states used directly from queries (not synced to store)
-- [ ] Query invalidation used instead of manual refetch
-- [ ] Query keys follow hierarchical structure
-- [ ] Server state in React Query, client state in Zustand
+```tsx
+// ❌ Bad: mutateAsync with manual state management
+const [isLoading, setIsLoading] = useState(false)
+const [formError, setFormError] = useState<string | null>(null)
+
+const handleSubmit = async (data: FormData) => {
+  setIsLoading(true)
+  setFormError(null)
+  try {
+    await mutation.mutateAsync(data)
+  } catch (error) {
+    setFormError(error.message)
+  } finally {
+    setIsLoading(false)
+  }
+}
+
+// ✅ Good: .mutate() with callbacks, derive state from mutation
+const mutation = useMutation({ mutationFn: createOrder })
+const formError = getErrorMessage(mutation.error)
+
+const handleSubmit = (data: FormData) => {
+  mutation.mutate(data, {
+    onSuccess: (result) => {
+      closeModal()
+      navigateTo(result.id)
+    },
+  })
+}
+```
+
+Why: React Query already tracks `isPending`, `error`, and `isSuccess`. Using `.mutateAsync()` with try/catch duplicates state that React Query manages for free.
+
+## Separate Hook-Level and Per-Call Mutation Callbacks
+
+Use hook-level callbacks for shared concerns (cache invalidation), per-call callbacks for context-specific behavior (UI updates):
+
+```tsx
+// Hook level — runs for ALL calls
+export const useCreateOrderMutation = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: createOrder,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['orders'] })
+    },
+  })
+}
+
+// Per-call level — runs for THIS call only
+mutation.mutate(data, {
+  onSuccess: (result) => {
+    closeModal()
+    navigateTo(result.id)
+  },
+})
+```
+
+Why: Both callbacks run on success. Hook-level handles global concerns (cache), per-call handles local concerns (UI). This keeps the hook reusable across different call sites.
+
+## Keep Mutation Hooks as Thin API Wrappers
+
+Mutation hooks should only call APIs. Move business logic to helper functions or components:
+
+```tsx
+// ✅ Good: Hook just calls the API
+export const useVerifyAddressMutation = () => {
+  const config = useConfig()
+
+  return useMutation({
+    mutationFn: async (params: VerifyAddressParams) => {
+      return verifyAddress(config, params)
+    },
+  })
+}
+
+// ❌ Bad: Business logic inside mutation
+export const useVerifyAddressMutation = () => {
+  return useMutation({
+    mutationFn: async (params) => {
+      const response = await fetchAddress(params)
+      // This logic doesn't belong here
+      const hasDifferences = compareAddresses(params, response)
+      return { status: hasDifferences ? 'corrected' : 'valid', suggested: response }
+    },
+  })
+}
+```
+
+Why: Thin hooks are reusable across different use cases. Business logic is testable without mocking hooks.
+
+## Derive State from Mutations Instead of useState
+
+Don't create separate state for things React Query already tracks:
+
+```tsx
+// ✅ Good: Derive from mutation state
+const mutation = useMutation({ mutationFn: saveData })
+const isLoading = mutation.isPending
+const formError = getErrorMessage(mutation.error)
+
+// ❌ Bad: Duplicate state that mirrors mutation
+const [isLoading, setIsLoading] = useState(false)
+const [formError, setFormError] = useState<string | null>(null)
+```
+
+Why: Duplicate state creates sync bugs and extra code. React Query already manages `isPending`, `error`, and `isSuccess`.
+
+## Avoid Wrapping Mutations in useCallback
+
+The `mutation.mutate` function reference is stable. Don't wrap it:
+
+```tsx
+// ✅ Good: Call mutation directly
+const handleSave = () => {
+  mutation.mutate(buildArgs(formData))
+}
+
+// ❌ Bad: Unnecessary wrapper
+const saveAddress = useCallback(async (data: FormData) => {
+  await mutation.mutateAsync(buildArgs(data))
+}, [mutation])
+```
+
+Why: `useCallback` adds indirection without benefit. If you need to transform data, do it inline or use a simple function.
+
+## Type Mutation Errors Explicitly
+
+Specify the error type in the mutation generic so callbacks and error handling get proper types:
+
+```tsx
+// ✅ Good: Explicit error type
+useMutation<CreateOrderResponse, HydraError, CreateOrderArgs>({
+  mutationFn: createOrder,
+  onError: (error) => {
+    // error is typed as HydraError
+    logger.error('[Checkout] Order failed', { error })
+  },
+})
+
+// ❌ Bad: Error defaults to Error
+useMutation({
+  mutationFn: createOrder,
+})
+```
+
+Why: Explicit error types enable proper error handling and TypeScript inference in callbacks.
+
+## Decision Trees
+
+### .mutate() vs .mutateAsync()
+
+```
+Do I need the result immediately in this function?
+├─ YES → Do I have complex sequential logic?
+│  ├─ YES → mutateAsync with proper error handling
+│  └─ NO → mutate with onSuccess callback (preferred)
+└─ NO → mutate() is always fine
+```
+
+### Where Should Mutation Logic Live?
+
+```
+Is it API call mechanics?
+├─ YES → In the mutation hook
+└─ NO → Is it data transformation for the API?
+   ├─ YES → Helper function, called when invoking mutation
+   └─ NO → Is it response transformation for UI?
+      ├─ YES → Helper function, called in onSuccess
+      └─ NO → Component logic
+```
+
+### Should I Use useState for This?
+
+```
+Is it already tracked by a hook/mutation?
+├─ YES → Derive from existing state
+│        (mutation.error, mutation.isPending, form.formState)
+└─ NO → Does it need to persist across renders?
+   ├─ YES → Is it form field state?
+   │  ├─ YES → Use React Hook Form
+   │  └─ NO → useState is appropriate
+   └─ NO → Local variable is fine
+```
