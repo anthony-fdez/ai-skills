@@ -35,7 +35,11 @@ Cherry-pick individual skills or commands as needed — each is a standalone mar
 │   └── writing-typescript/
 └── commands/         # Slash commands
     ├── create-pr.md
-    └── pr-description.md
+    ├── explain-system.md
+    ├── investigate.md
+    ├── pr-description.md
+    ├── review-pr.md
+    └── verify-branch.md
 ```
 
 ## Skills
@@ -52,7 +56,11 @@ Cherry-pick individual skills or commands as needed — each is a standalone mar
 
 ## Commands
 
-| Command           | Description                                                     |
-| ----------------- | --------------------------------------------------------------- |
-| `/pr-description` | Generates a structured PR description and writes it to a file   |
-| `/create-pr`      | Creates a GitHub PR with title, description, and branch target  |
+| Command            | Description                                                        |
+| ------------------ | ------------------------------------------------------------------ |
+| `/create-pr`       | Creates a GitHub PR with title, description, and branch target     |
+| `/explain-system`  | Deep-dives a system or module: dependencies, data flow, gotchas    |
+| `/investigate`     | Traces an error through the codebase to find root cause and fixes  |
+| `/pr-description`  | Generates a structured PR description and writes it to a file      |
+| `/review-pr`       | Reviews a PR: summarizes changes, flags issues, checks test gaps   |
+| `/verify-branch`   | Verifies branch changes against design docs and tests features     |
