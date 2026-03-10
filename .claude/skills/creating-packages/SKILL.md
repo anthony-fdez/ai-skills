@@ -1,6 +1,6 @@
 ---
 name: creating-packages
-description: Patterns for creating reusable packages with consistent structure, exports, and type conventions. Use when creating a shared package, extracting reusable code, or building API client wrappers.
+description: Patterns for creating reusable packages with consistent structure, exports, and type conventions. Use when creating a shared package, extracting reusable code into packages/, building API client wrappers, or setting up package entry points and exports. Also trigger when deciding on package structure, naming types for client packages, colocating types with functions, or when building thin API client shims that should not contain business logic.
 ---
 
 # Creating Packages
@@ -236,3 +236,17 @@ type Policy = NonNullable<Product['policies']>[number]
 ```
 
 Why: Origin of the type is explicit. Client package stays thin. Less maintenance when API types change.
+
+---
+
+## Checklist
+
+- [ ] Package follows standard structure (src/, package.json, tsconfig.json)
+- [ ] Types point to source files in package.json (not compiled .d.ts)
+- [ ] Entry point pattern matches package complexity (single vs multiple)
+- [ ] Internal dependencies use workspace:* protocol
+- [ ] Client packages are thin shims (no business logic, no filtering utilities)
+- [ ] Each endpoint maps to one exported function
+- [ ] Types named by function coupling (FnNameArgs, FnNameConfig, FnNameResponse)
+- [ ] Types colocated with their function file
+- [ ] Only API-provided data is exported (no derived types)

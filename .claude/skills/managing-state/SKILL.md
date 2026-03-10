@@ -1,11 +1,21 @@
 ---
 name: managing-state
-description: Enforces Zustand state management patterns including store structure, actions, and subscriptions. Use when working with global state, creating actions, or optimizing re-renders.
+description: Enforces Zustand state management patterns including store structure, actions, and subscriptions. Use when working with global state, creating Zustand stores or slices, adding actions, using selectors, or any time code might sync React Query data into Zustand (a critical anti-pattern to prevent). Also trigger when optimizing re-renders, deciding whether data belongs in Zustand vs React Query, or when a component subscribes to the full store instead of specific slices.
 ---
 
 # Managing State (Zustand)
 
 Zustand is for **CLIENT state only**. See `writing-react-query` skill for server/API state.
+
+## Contents
+
+- [Never Sync React Query Data to Zustand](#never-sync-react-query-to-zustand)
+- [Use Single Global Store Architecture](#store-architecture)
+- [Use Partial Updates with Spread](#action-patterns)
+- [Subscribe Selectively to Needed State](#selective-subscriptions)
+- [Know What Belongs Where](#what-belongs-where)
+
+---
 
 ## NEVER Sync React Query to Zustand
 

@@ -1,11 +1,25 @@
 ---
 name: writing-nextjs
-description: Enforces Next.js Pages Router patterns for pages, data fetching, and API routes. Use when creating pages, implementing data fetching, or writing API routes.
+description: Enforces Next.js Pages Router patterns for pages, data fetching, static generation, and page-level concerns. Use when creating pages, implementing getStaticProps/getServerSideProps, writing middleware, optimizing with ISR, adding SEO meta tags, creating error pages, or configuring internationalization. Note: for API route handlers (src/app/api/), use the designing-apis skill instead — this skill covers page-level patterns only.
 ---
 
 # Writing Next.js (Pages Router)
 
-Patterns for Next.js Pages Router including page structure, data fetching, and API routes.
+Patterns for Next.js Pages Router including page structure, data fetching, and page-level concerns.
+
+## Contents
+
+- [Follow Standard Page Structure](#page-structure)
+- [Use Standard Page Pattern with Head and SEO](#standard-page-pattern)
+- [Prefer Static Generation with ISR](#data-fetching)
+- [Use Server-Side Rendering Only When Needed](#server-side-rendering-when-needed)
+- [Add SEO and Meta Tags](#seo--meta-tags)
+- [Create Custom Error Pages](#error-pages)
+- [Lazy Load Heavy Components](#lazy-load-heavy-components)
+- [Optimize Images with next/image](#optimize-images)
+- [Use Translations for All User-Facing Text](#internationalization)
+
+---
 
 ## Page Structure
 
@@ -74,6 +88,8 @@ export const getStaticProps: GetStaticProps = async () => {
 }
 ```
 
+Why: Static generation serves pre-built HTML from the CDN — it's the fastest option. ISR gives you the speed of static with the freshness of dynamic.
+
 ### Dynamic Routes with getStaticPaths
 
 ```tsx
@@ -118,47 +134,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 ## API Routes
 
-### Standard Pattern
+For API route handlers, see the **designing-apis** skill which covers the standard patterns for `src/app/api/` route handlers with Zod validation and consistent error responses.
 
-```tsx
-// api/endpoint.api.ts (note .api.ts extension)
-import type { NextApiRequest, NextApiResponse } from 'next'
-
-type ResponseData = {
-  success: boolean
-  data?: DataType
-  error?: string
-}
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<ResponseData>,
-) {
-  // 1. Check HTTP method
-  if (req.method !== 'POST') {
-    return res.status(405).json({ success: false, error: 'Method not allowed' })
-  }
-
-  // 2. Validate request body
-  const { email, password } = req.body
-  if (!email || !password) {
-    return res
-      .status(400)
-      .json({ success: false, error: 'Missing required fields' })
-  }
-
-  try {
-    // 3. Handle request
-    const data = await processRequest(req.body)
-
-    // 4. Return success
-    res.status(200).json({ success: true, data })
-  } catch (error) {
-    // 5. Handle errors
-    res.status(500).json({ success: false, error: 'Internal server error' })
-  }
-}
-```
+This skill focuses on page-level concerns only (data fetching, SEO, middleware, etc.).
 
 ## SEO & Meta Tags
 
@@ -275,6 +253,8 @@ const HeavyChart = dynamic(() => import('@/components/HeavyChart'), {
   ssr: false, // Client-only component
 })
 ```
+
+Why: Heavy components (charts, editors, maps) block initial page load. Dynamic imports with ssr: false keep them out of the server bundle entirely.
 
 ### Optimize Images
 

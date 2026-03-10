@@ -1,6 +1,6 @@
 ---
 name: securing-code
-description: Implements security patterns including PCI compliance, input validation, and error information leakage prevention. Use when handling sensitive data, payment information, authentication tokens, or writing API endpoints.
+description: Implements security patterns including PCI compliance, input validation, and error information leakage prevention. Use when handling sensitive data, payment information, authentication tokens, credit card details, webhook signatures, or writing any API endpoint that processes user input. Also trigger when logging (to prevent sensitive data leakage), handling payment retries/idempotency, storing or transmitting tokens, or when error responses might accidentally expose stack traces or internal service details.
 ---
 
 # Security Patterns

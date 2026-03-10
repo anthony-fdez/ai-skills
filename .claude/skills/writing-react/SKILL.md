@@ -1,9 +1,23 @@
 ---
 name: writing-react
-description: Enforces React component patterns, state management, and anti-patterns. Use when writing any React component, handling state, or using hooks.
+description: Enforces React component patterns, state management, and anti-patterns specific to this codebase. Use when writing any React component, handling component state, using hooks, passing props, structuring JSX, or refactoring component logic. Also trigger when reviewing components for anti-patterns like syncing props to state via useEffect, using useEffect for event handling or data fetching, creating render functions instead of extracting components, or passing setters as props instead of callbacks.
 ---
 
 # Writing React Components
+
+## Contents
+
+- [Structure Components as Hooks → Handlers → Render](#component-structure)
+- [Pass Callbacks, Not Setters](#props-pass-callbacks-not-setters)
+- [Don't Sync Props to State](#dont-sync-props-to-state)
+- [Don't Store Computed Values](#dont-store-computed-values)
+- [Don't Use useEffect for Events](#no-useeffect-for-events--track-in-the-handler)
+- [Don't Use useEffect for Data Fetching](#no-useeffect-for-data-fetching--use-react-query)
+- [Extract Complex Conditionals to Named Booleans](#extract-complex-conditionals)
+- [Extract Components, Not Render Functions](#extract-components-not-render-functions)
+- [Keep API Data in React Query Only](#data-flow-single-source-of-truth)
+
+---
 
 ## Component Structure
 
@@ -40,6 +54,8 @@ Arrow function components only. No `function` declarations.
 <QuantityControls itemCount={itemCount} onItemCountChange={handleItemCountChange} />
 ```
 
+Why: Setters expose implementation details and couple the child to the parent's state shape. Callbacks let the parent control what happens, making the child reusable.
+
 ## State Anti-Patterns
 
 ### Don't Sync Props to State
@@ -55,6 +71,8 @@ const selectedItem = useMemo(
   [items, query.id],
 )
 ```
+
+Why: useState + useEffect sync creates a render where the old value is visible before the effect runs. Deriving during render is always in sync.
 
 ### Don't Store Computed Values
 
@@ -117,6 +135,8 @@ return <div>{renderDescription()}</div>
 <ProductDescription isCompact={isCompact} item={selectedItem} />
 ```
 
+Why: Render functions are recreated every render and can't have their own hooks. Separate components get their own lifecycle and memoization boundary.
+
 ### No Inline Complex Logic
 
 Extract handlers longer than a few lines into named functions.
@@ -130,6 +150,8 @@ Extract handlers longer than a few lines into named functions.
 // ✅ Good: Zustand for frequently changing state (components subscribe to only what they need)
 // ✅ Good: Composition pattern to avoid prop drilling
 ```
+
+Why: Context re-renders all consumers on any change. Zustand with selectors lets components subscribe to only the state they need.
 
 ## Data Flow: Single Source of Truth
 

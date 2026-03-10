@@ -1,6 +1,6 @@
 ---
-name: ask-questions-if-underspecified
-description: Clarify requirements before implementing. Use when serious doubts arise.
+name: ask-questions-if-unspecified
+description: Clarify requirements before implementing. Use when the user's request has ambiguous scope, multiple valid interpretations, or missing critical details like target files, expected behavior, or constraints. Also trigger when the user gives a vague instruction like "fix this", "make it better", "add a feature", "clean this up", or any request where jumping straight to implementation risks doing the wrong work. Even a seemingly simple request can be underspecified if the codebase has multiple plausible targets.
 ---
 
 # Ask Questions If Underspecified

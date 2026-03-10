@@ -1,6 +1,6 @@
 ---
 name: writing-tests
-description: Enforces Playwright testing patterns including selectors, POMs, and best practices. Use when writing E2E tests, creating page objects, or debugging test failures.
+description: Enforces Playwright testing patterns including selectors, POMs, and best practices. Use when writing E2E tests, creating page objects, adding data-test attributes to components, debugging test failures, or setting up test infrastructure. Also trigger when adding testability to UI components, reviewing test code for anti-patterns like arbitrary waits or shared test state, or when the user asks to make something "testable".
 ---
 
 # Writing Tests (Playwright)
@@ -81,6 +81,8 @@ await page.locator('.submit-btn').click()
 await page.locator('#email').fill('test@example.com')
 ```
 
+Why: data-test attributes are decoupled from styling and structure — they survive refactors, redesigns, and CSS framework changes.
+
 ## Page Object Models (POMs)
 
 ### Structure
@@ -139,6 +141,8 @@ test('checkout flow', async ({ page }) => {
   await checkout.expectSuccess()
 })
 ```
+
+Why: POMs centralize selectors and actions so when the UI changes, you update one file instead of every test that touches that page.
 
 ## Test Configuration
 
@@ -255,6 +259,8 @@ test('should checkout', async ({ page }) => {
 })
 ```
 
+Why: Tests that depend on previous test state break when run in parallel, in isolation, or in a different order — and the failures are extremely hard to debug.
+
 ### Use Auto-Retry Assertions
 
 ```typescript
@@ -265,6 +271,8 @@ await expect(page.getByTestId('success')).toBeVisible()
 // ❌ Bad: Arbitrary waits
 await page.waitForTimeout(3000) // Never do this
 ```
+
+Why: Playwright's expect() auto-retries until the assertion passes or times out. Arbitrary waits (waitForTimeout) are flaky — sometimes too short, sometimes wastefully long.
 
 ### Parallel Execution
 

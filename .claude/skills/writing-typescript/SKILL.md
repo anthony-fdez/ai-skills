@@ -1,11 +1,29 @@
 ---
 name: writing-typescript
-description: Enforces TypeScript patterns including type inference, union types over overloading, and compile-time safety. Use when writing any TypeScript code across the codebase.
+description: Enforces this codebase's TypeScript conventions including named object parameters for ALL functions, no comments/JSDoc, type inference over explicit types, discriminated unions, const objects over enums, and Zod at I/O boundaries. Use when writing any TypeScript code, defining types, working with enums, handling errors with type guards, or configuring environment variables. Critical patterns that differ from standard TS: every function uses destructured object params (no positional args), no JSDoc comments ever, and no type assertions.
 ---
 
 # Writing TypeScript
 
-Language-level TypeScript patterns that apply across all code.
+TypeScript patterns specific to this codebase that differ from standard conventions.
+
+## Contents
+
+- [Follow Code Style Rules](#code-style-rules)
+- [Write Self-Documenting Code (No Comments)](#no-comments-rule)
+- [Prefer Inference Over Explicit Types](#prefer-inference-over-explicit-types)
+- [No Function Overloading](#no-function-overloading)
+- [No Type Assertions (as keyword)](#no-type-assertions-as-keyword)
+- [No `any` Type](#no-any-type)
+- [No Non-Null Assertions (!)](#no-non-null-assertions-)
+- [No Traditional Enums](#no-traditional-enums)
+- [Use Discriminated Unions](#use-discriminated-unions)
+- [Fail Fast on Missing Environment Variables](#environment-variables-pattern)
+- [No Magic Strings/Numbers](#no-magic-stringsnumbers)
+- [Validate with Zod at I/O Boundaries](#zod-at-io-boundaries)
+- [Named Object Parameters (ALWAYS)](#named-object-parameters-always)
+
+---
 
 ## Code Style Rules
 

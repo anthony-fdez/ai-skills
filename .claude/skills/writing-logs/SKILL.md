@@ -1,6 +1,6 @@
 ---
 name: writing-logs
-description: Enforces logging patterns for DataDog including tag ordering, structured metadata, and log levels. Use when adding logs, debugging, or instrumenting code for observability.
+description: Enforces structured logging patterns for DataDog including context prefixes in square brackets, tag ordering (group > page > source > operation > status), log levels, and metadata structure. Use when adding any log statements, instrumenting code for observability, debugging with logs, or adding retry logging. Also trigger when reviewing logs for proper tag cardinality, message formatting, error serialization, or when code puts high-cardinality data in tags instead of metadata.
 ---
 
 # Writing Logs

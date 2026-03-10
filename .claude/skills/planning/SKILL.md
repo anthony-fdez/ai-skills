@@ -1,11 +1,22 @@
 ---
 name: planning
-description: Creates implementation plans for features and changes. Use when planning any non-trivial work before implementation begins.
+description: Creates implementation plans for features and changes. Use when planning any non-trivial work before implementation begins, when the user says "plan", "think through", "how should I approach", "what's the best way to", "design", or describes a multi-step feature. Also trigger for any task that touches multiple files, involves state management changes, or requires coordination across components — even if the user didn't explicitly ask for a plan.
 ---
 
 # Planning
 
 Creating implementation plans that ensure nothing is missed and all context is gathered before coding begins.
+
+## Contents
+
+- [Decide When to Plan](#when-to-plan)
+- [Enter Plan Mode](#phase-1-enter-plan-mode)
+- [Gather Context from Docs and Codebase](#phase-2-context-gathering)
+- [Write a Self-Contained Plan Document](#phase-3-plan-creation)
+- [Present Plan for User Approval](#phase-4-review)
+- [Verify, Document, and Clean Up After Implementation](#post-implementation)
+
+---
 
 ## When to Plan
 

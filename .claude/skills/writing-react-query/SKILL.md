@@ -1,11 +1,29 @@
 ---
 name: writing-react-query
-description: Enforces React Query patterns for data fetching, caching, mutations, and server state management. Use when writing queries, mutations, or handling API data.
+description: Enforces React Query patterns for data fetching, caching, mutations, and server state management. Use when writing queries, mutations, query hooks, configuring staleTime/gcTime, using query invalidation, or handling any API data. Also trigger when deciding where data belongs (React Query vs Zustand), when code might sync loading/error states from queries into global state, or when using .mutateAsync() instead of .mutate() with callbacks — both are anti-patterns this skill prevents.
 ---
 
 # Writing React Query
 
 Patterns for using React Query effectively, including hook organization, caching strategies, mutation patterns, and anti-patterns to avoid.
+
+## Contents
+
+- [Create Dedicated Query Hooks](#create-dedicated-query-hooks)
+- [Couple Params to Action Types](#couple-params-to-action-types)
+- [Use select for Transformations](#use-select-for-transformations)
+- [Configure staleTime and gcTime](#configure-staletime-and-gctime)
+- [Keep API Data in React Query, Not Global State](#keep-api-data-in-react-query-not-global-state)
+- [Keep Query Functions Pure](#keep-query-functions-pure)
+- [Don't Sync Loading State to Global Store](#dont-sync-loading-state-to-global-store)
+- [Use Query Invalidation, Not Manual Refetch](#use-query-invalidation-not-manual-refetch)
+- [Use Hierarchical Query Keys](#use-hierarchical-query-keys)
+- [Use .mutate() with Callbacks Instead of .mutateAsync()](#use-mutate-with-callbacks-instead-of-mutateasync)
+- [Separate Hook-Level and Per-Call Mutation Callbacks](#separate-hook-level-and-per-call-mutation-callbacks)
+- [Keep Mutation Hooks as Thin API Wrappers](#keep-mutation-hooks-as-thin-api-wrappers)
+- [Derive State from Mutations Instead of useState](#derive-state-from-mutations-instead-of-usestate)
+
+---
 
 ## Create Dedicated Query Hooks
 

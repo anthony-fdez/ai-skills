@@ -1,6 +1,6 @@
 ---
 name: writing-skills
-description: Writes Claude Code skills for AI-assisted development patterns. Use when creating or updating .claude/skills/*/SKILL.md files.
+description: Writes Claude Code skills for AI-assisted development patterns. Use when creating or updating .claude/skills/*/SKILL.md files, reviewing existing skills for quality, designing new skill trigger descriptions, or when the user wants to document a codebase pattern as a reusable skill. Also trigger when discussing skill structure, frontmatter conventions, or how to make skills trigger reliably.
 ---
 
 # Writing Skills

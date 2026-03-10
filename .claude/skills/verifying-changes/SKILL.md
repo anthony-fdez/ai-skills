@@ -1,6 +1,6 @@
 ---
 name: verifying-changes
-description: Self-verification loop for validating code changes through code quality checks and Chrome MCP browser verification. Use when implementing UI changes, fixing bugs, or completing features that need visual or functional verification.
+description: Self-verification loop for validating code changes through code quality checks and Chrome MCP browser verification. Use when implementing UI changes, fixing bugs, completing features that need visual or functional verification, or any time code changes need to be validated before marking as done. Also trigger when the user says "verify", "check if it works", "test this", or after completing a multi-step implementation — never claim something works without observing it.
 ---
 
 # Verifying Changes

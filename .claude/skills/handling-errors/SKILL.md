@@ -1,9 +1,21 @@
 ---
 name: handling-errors
-description: Enforces error handling patterns including error bubbling, progressive degradation, and user-friendly messages. Use when handling errors, displaying error states, or implementing error boundaries.
+description: Enforces error handling patterns including error bubbling, progressive degradation, and user-friendly messages. Use when handling errors, catching exceptions, displaying error states, implementing error boundaries, showing error alerts, writing try/catch blocks, or deciding whether to throw vs return errors. Also trigger when building fallback UI, retry mechanisms, or any time a component needs to gracefully handle a failed API call without unmounting the entire page.
 ---
 
 # Handling Errors
+
+## Contents
+
+- [Throw Errors, Don't Return Them](#core-principle-errors-bubble-up-throw-dont-return)
+- [Use Consistent Error Format](#consistent-error-format)
+- [Degrade Progressively (Don't Unmount on Error)](#progressive-degradation-dont-unmount-on-error)
+- [Write User-Friendly Error Messages](#user-friendly-error-messages)
+- [Use ErrorAlert Component](#erroralert-component-usage)
+- [Handle Form Errors with setError](#form-error-handling)
+- [Use Error Type Guards](#error-type-guards)
+
+---
 
 ## Core Principle: Errors Bubble Up, Throw Don't Return
 
@@ -60,6 +72,8 @@ type ServiceSuccess<T> = { error: false; data: T }
 type ServiceResponse<T> = ServiceError | ServiceSuccess<T>
 ```
 
+Why: A consistent error shape means every consumer can handle errors the same way — no special-casing per endpoint or service.
+
 ## Progressive Degradation (Don't Unmount on Error)
 
 ```tsx
@@ -97,6 +111,8 @@ if (isError) return <ErrorPage />
 'Unable to calculate shipping cost. Please verify your address is complete.'
 'Payment declined. Please check your card details or try a different payment method.'
 ```
+
+Why: Technical error messages confuse users and leak implementation details. Actionable messages tell users what to do next, reducing support tickets.
 
 ## ErrorAlert Component Usage
 

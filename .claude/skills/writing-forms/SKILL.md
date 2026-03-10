@@ -1,11 +1,25 @@
 ---
 name: writing-forms
-description: Enforces form patterns using react-hook-form and Zod validation. Use when creating forms, handling validation, or managing form state.
+description: Enforces form patterns using react-hook-form and Zod validation. Use when creating any form, adding form fields, handling validation, managing form state, implementing multi-step forms, or working with form submissions. Also trigger when adding error messages to fields, implementing loading states on submit buttons, integrating special inputs like OTP or phone number fields, or deciding between controlled vs uncontrolled components in a form context.
 ---
 
 # Writing Forms
 
 Patterns for implementing forms with react-hook-form and Zod validation.
+
+## Contents
+
+- [Use Standard Form Pattern with Zod Resolver](#standard-form-pattern)
+- [Build Complete Field Components](#field-component-pattern)
+- [Use Common Validation Patterns](#validation-patterns)
+- [Handle Errors at Field and Form Level](#error-handling)
+- [Show Loading States During Submission](#loading-states)
+- [Validate Steps Independently in Multi-Step Forms](#multi-step-forms)
+- [Prefer Uncontrolled Components (register)](#controlled-vs-uncontrolled)
+- [Add Accessibility Attributes](#accessibility)
+- [Add data-test Attributes for Testing](#testing-forms)
+
+---
 
 ## Standard Form Pattern
 
@@ -54,6 +68,8 @@ const LoginForm = () => {
   return <form onSubmit={handleSubmit(onSubmit)}>{/* Form fields */}</form>
 }
 ```
+
+Why: zodResolver validates the entire form against the schema before onSubmit fires, so you never handle invalid data in your submission logic.
 
 ## Field Component Pattern
 
@@ -238,6 +254,8 @@ const MultiStepForm = () => {
 }
 ```
 
+Why: Validating only current step fields with trigger() prevents users from seeing errors for steps they haven't reached yet.
+
 ## Special Input Components
 
 ### OTP Input
@@ -278,6 +296,8 @@ import PhoneInput from 'react-phone-number-input'
 // ✅ Good: Uncontrolled with register (better performance)
 <Input {...register('email')} />
 ```
+
+Why: Uncontrolled inputs with register avoid re-renders on every keystroke. Use Controller only when the component doesn't support ref forwarding.
 
 ### Use Controller for Custom Components
 
@@ -353,6 +373,8 @@ useEffect(() => {
 
 return <div ref={stepRef}>{step === 1 && <Step1 />}</div>
 ```
+
+Why: Screen readers need explicit focus management — without it, users land at the top of the page after each step transition.
 
 ## Testing Forms
 

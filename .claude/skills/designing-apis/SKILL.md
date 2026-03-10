@@ -1,6 +1,6 @@
 ---
 name: designing-apis
-description: Designs REST APIs with Zod validation, consistent error responses, and App Router patterns. Use when creating route handlers, API endpoints, or server-only utilities.
+description: Designs REST APIs with Zod validation, consistent error responses, and Next.js App Router patterns. Use when creating route handlers in src/app/api/, writing API endpoints, validating request bodies or query params with Zod, designing error response formats, or working with server-only utilities. Also trigger when implementing idempotency keys, setting cache headers, handling dynamic route parameters, or when any API route needs consistent error shape with code/message/detail/context fields.
 ---
 
 # API Design Patterns

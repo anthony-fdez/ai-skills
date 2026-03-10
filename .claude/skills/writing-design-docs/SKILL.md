@@ -1,6 +1,6 @@
 ---
 name: writing-design-docs
-description: Writes design docs for features and systems using Purpose/Behavior/Verify. Use when creating or updating files in docs/features/ or docs/architecture/.
+description: Writes design docs for features and systems using Purpose/Behavior/Verify structure. Use when creating or updating files in docs/features/ or docs/architecture/, and critically, when any code change modifies behavior that has associated documentation — the docs must be updated in the same PR. Also trigger when documenting a completed feature, writing architecture decisions, or when the user mentions design docs, feature specs, or system documentation.
 ---
 
 # Writing Design Docs

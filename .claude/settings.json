@@ -47,26 +47,6 @@
       "Write",
       "NotebookEdit"
     ],
-
-    "ask": [
-      "Bash(env)",
-      "Bash(printenv *)",
-      "Bash(npm install *)",
-      "Bash(npx *)",
-      "Bash(curl *)",
-      "Bash(wget *)",
-      "Bash(git commit *)",
-      "Bash(git push *)",
-      "Bash(git checkout *)",
-      "Bash(git stash *)",
-      "Bash(git rebase *)",
-      "Bash(git reset *)",
-      "Bash(git branch -D *)",
-      "Bash(rm *)",
-      "Bash(rm -r *)",
-      "Bash(rm -rf *)"
-    ],
-
     "deny": [
       "Bash(ssh *)",
       "Bash(rsync *)",
@@ -84,6 +64,27 @@
       "Bash(cargo *)",
       "Bash(go *)",
       "Bash(rustc *)"
+    ],
+    "ask": [
+      "Bash(env)",
+      "Bash(printenv *)",
+      "Bash(npm install *)",
+      "Bash(npx *)",
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git checkout *)",
+      "Bash(git stash *)",
+      "Bash(git rebase *)",
+      "Bash(git reset *)",
+      "Bash(git branch -D *)",
+      "Bash(rm *)",
+      "Bash(rm -r *)",
+      "Bash(rm -rf *)"
     ]
+  },
+  "enabledPlugins": {
+    "skill-creator@claude-plugins-official": true
   }
 }
